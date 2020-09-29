@@ -19,4 +19,4 @@ ENV TOKEN_TG asd789asd78asdsada9sdsad
 
 WORKDIR ${path}/app
 #CMD tail -f /dev/null
-CMD  python main.py
+CMD  python echoBot.py
