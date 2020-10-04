@@ -47,6 +47,8 @@ def get_projects():
         price = " - ".join(price)
         description = item.select_one("div.breakwords.hidden")
         description = description.text.replace("Скрыть","").strip() if description else "Description error"
+        if description == "Description error":
+            description = item.select_one("div.breakwords.first-letter").text if description else "Description error2"
         proposal_count = item.find(lambda tag:tag.name == "span" and "Предложений:" in tag.text)
         proposal_count = re.findall(r"\d+", proposal_count.text)[0] if proposal_count else "Prop error"
         author = item.select_one("a.v-align-t")
@@ -62,5 +64,3 @@ def get_projects():
     return projects
 
 projects = get_projects
-
-
