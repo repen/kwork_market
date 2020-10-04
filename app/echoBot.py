@@ -50,7 +50,13 @@ class Telegram:
             params = { 'timeout': self.timeout, 'offset': self.update_id }
             try:
                 resp = requests.get(self.api_url + method, params, timeout=self.timeout*2)
-                message_list = resp.json()['result']
+                data = resp.json()
+
+                if "result" in data.keys():
+                    message_list = data['result']
+                else:
+                    raise StopIteration
+
                 if message_list:
                     if self.update_id is None:
                         self.update_id = message_list[0]['update_id']
