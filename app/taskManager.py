@@ -4,11 +4,20 @@ from tools import log as logger, hash_, divide_message
 from Globals import PATH
 log = logger("task manager", "task_manager.log")
 
+
+class Memento:
+    def __init__(self, state):
+        self._state = state
+
+    def get_state(self):
+        return self._state
+
+
 class Task:
 
     
     def __init__(self, *args):
-        self.func    = args[0]
+        self.func = args[0]
         self.sent = []
 
     def __call__(self, *args, **kwargs):
@@ -40,14 +49,18 @@ class TaskManager:
 
     def save_state(self):
         absolute = os.path.join(PATH, "state")
+        
+        memento = Memento( self.users )
+
         with open(absolute, "wb") as f:
-            pickle.dump(self.users, f)
+            pickle.dump( memento, f)
 
     def load_state(self):
         try:
             absolute = os.path.join(PATH, "state")
             with open(absolute, "rb") as f:
-                data = pickle.load(f)
+                memento = pickle.load(f)
+            data = memento.get_state()
             return data
         except FileNotFoundError as E:
             return {}
