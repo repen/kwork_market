@@ -28,6 +28,8 @@ def func1(data):
 def func2(data):
     [write_queue.put(obj) for obj in data]
 
+def hole(data):
+    pass
 
 data_manager = get_projects
 task_manager = TaskManager( data_manager, message_queue )
@@ -40,6 +42,7 @@ class Telegram:
         self.update_id = None
         self.api_url   = "https://api.telegram.org/bot{}/".format(token)
         self.timeout   = 10
+        self.W = 0
 
     def get_updates(self):
         while True:
@@ -100,7 +103,11 @@ class Telegram:
                 log.info("text = %s | chat_id = %d", message, chat)
                 if message == "/kwork add":
                     # added task
-                    task = Task( func1, func2 )
+                    if not self.W:
+                        task = Task( func1, func2 )
+                        self.W += 1
+                    else:
+                        task = Task( func1, hole )
                     task_manager[user_id] = task
                     log.info("/kwork add Task create")
 

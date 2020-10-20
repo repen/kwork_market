@@ -1,7 +1,9 @@
 #https://habr.com/ru/post/353234/
 #docker build -t kwork_market:latest .
 #docker run --name kwork --rm kwork_market:latest
-
+#docker run --name kwork -v kwork_db:/site/app/data -d kwork_market:latest
+#docker build -t kwork_market:latest .
+#docker rm -f kwork;docker build -t kwork_market:latest . && docker run --name kwork -v kwork_db:/site/app/data -d kwork_market:latest
 
 FROM python:3.6-alpine
 

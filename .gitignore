@@ -8,6 +8,7 @@ text.txt
 .idea
 info
 state
+Globals.py
 # Distribution / packaging
 .Python
 build/
