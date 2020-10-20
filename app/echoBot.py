@@ -1,12 +1,20 @@
 import requests, time, pickle
 from tools import log as logger, divide_message
-from Model import get_projects
+from Model import get_projects, UsersProject
 from queue import Queue
 from threading import Thread
 from taskManager import TaskManager, Task
 from Globals import TOKEN
 
 message_queue = Queue()
+write_queue   = Queue()
+
+
+def handler_write():
+    while True:
+        item = write_queue.get()
+        UsersProject.insert( item.__dict__ ).execute()
+        write_queue.task_done()
 
 log = logger("echoBot", "echoBot.log")
 
@@ -17,6 +25,8 @@ def func1(data):
         ll.append( project )
     return ll
 
+def func2(data):
+    [write_queue.put(obj) for obj in data]
 
 
 data_manager = get_projects
@@ -90,7 +100,7 @@ class Telegram:
                 log.info("text = %s | chat_id = %d", message, chat)
                 if message == "/kwork add":
                     # added task
-                    task = Task( func1 )
+                    task = Task( func1, func2 )
                     task_manager[user_id] = task
                     log.info("/kwork add Task create")
 
@@ -108,6 +118,7 @@ class Telegram:
             messages = items[1]
             if isinstance(messages, list):
                 for message in messages:
+                    message = str(message)
                     log.info("Len message: %d", len(message))
                     self.send_message(chat_id, message)
             if isinstance(messages, str):
@@ -135,6 +146,7 @@ class Telegram:
 
 
 def main():
+    Thread(target=handler_write).start()
     bot = Telegram(TOKEN)
     bot.echo()
 

@@ -2,9 +2,27 @@ import requests, re
 # import requests_cache
 from bs4 import BeautifulSoup
 from tools import log, hash_
+from peewee import *
+from Globals import PATH
+import os
+db = SqliteDatabase( os.path.join(PATH, 'data', 'kwork.db') )
 
 log = log("model", "model.log")
 # requests_cache.install_cache("demo_cache")
+
+class UsersProject(Model):
+    title = TextField()
+    description = TextField()
+    author = TextField()
+    proposal_count = TextField()
+    price = TextField()
+    timer = TextField()
+    link  = TextField()
+
+    class Meta:
+        database = db
+
+UsersProject.create_table()
 
 class Project:
     def __init__(self, *args):
@@ -66,4 +84,9 @@ def get_projects():
     return projects
 
 projects = get_projects
-get_projects()
+
+def main():
+    get_projects()
+
+if __name__ == '__main__':
+    main()

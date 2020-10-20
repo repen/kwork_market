@@ -17,7 +17,8 @@ class Task:
 
     
     def __init__(self, *args):
-        self.func = args[0]
+        self.func  = args[0]
+        self.func2 = args[1]
         self.sent = []
 
     def __call__(self, *args, **kwargs):
@@ -28,8 +29,9 @@ class Task:
             hs = project.hash()
             if hs not in self.sent:
 
-                temp.append( str(project)  )
+                temp.append( project  )
                 self.sent.append( hs )
+        self.func2( temp )
         return temp
 
 
